@@ -34,7 +34,7 @@ options:
         default: 3080
 
 author:
-    - David Flores (Twitter: @netpanda)
+    - David Flores (twitter -  @netpanda)
 '''
 
 EXAMPLES = '''
