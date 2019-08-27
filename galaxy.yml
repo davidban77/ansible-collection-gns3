@@ -1,4 +1,4 @@
-namespace: "gns3"
+namespace: "netpanda"
 name: "gns3"
 version: "1.0.0"
 readme: "README.md"
@@ -11,9 +11,8 @@ license:
 tags:
     - gns3
     - gns3fy
-    - gns3_server
     - networking
-    - rest-api
+    - rest
     - simulator
     - netops
 repository: "https://github.com/davidban77/ansible-collection-gns3"
