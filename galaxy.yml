@@ -1,0 +1,22 @@
+namespace: "gns3"
+name: "gns3"
+version: "1.0.0"
+readme: "README.md"
+description: "Module to interact with GNS3 server REST API. It is using the [gns3fy library](https://davidban77.github.io/gns3fy/)"
+authors:
+    - "David Flores <davidflores7_8@hotmail.com>"
+dependencies:
+license:
+    - "MIT"
+tags:
+    - gns3
+    - gns3fy
+    - gns3_server
+    - networking
+    - rest-api
+    - simulator
+    - netops
+repository: "https://github.com/davidban77/ansible-collection-gns3"
+documentation: "https://github.com/davidban77/ansible-collection-gns3/blob/develop/README.md"
+homepage: "https://github.com/davidban77/ansible-collection-gns3"
+issues: "https://github.com/davidban77/ansible-collection-gns3/issues"
