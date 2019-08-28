@@ -1,30 +1,25 @@
 #!/usr/bin/env python
 
-# Copyright: (c) 2018, David Flores <davidflores7_8@hotmail.com>
-# GNU General Public License v3.0+ (see COPYING or
-# https://www.gnu.org/licenses/gpl-3.0.txt)
-
 ANSIBLE_METADATA = {
-    "metadata_version": "1.1",
+    "metadata_version": "1.2",
     "status": ["preview"],
     "supported_by": "community",
 }
 
 DOCUMENTATION = """
 ---
-module: gns3
-
+module: gns3_project
 short_description: Module to interact with GNS3 server projects
-
 version_added: "2.8"
-
 description:
     - "Module to interact with GNS3 server projects. It is using the L(gns3fy library,
     https://davidban77.github.io/gns3fy/)"
     - It opens/closes projects and performs basic turnup/teradown operations on nodes.
     - It creates/updates or deletes projects, with the respective nodes and links
     specified
-
+requirements: [ gns3fy ]
+author:
+    - David Flores (@netpanda)
 options:
     url:
         description:
@@ -92,10 +87,6 @@ options:
             'eth0', 'alpine-2', 'eth0'])"
             - "Mandatory attributes: C(node_a), C(port_a), C(node_b) and C(port_b)"
         type: list
-
-
-author:
-    - David Flores (twitter - @netpanda)
 """
 
 EXAMPLES = """
@@ -130,14 +121,14 @@ EXAMPLES = """
 - name: Stop lab
   gns3_project:
     url: http://localhost
-    state: stopped
+    state: closed
     project_id: "UUID-SOMETHING-1234567"
 
 # Create a GNS3 project
-- name: Create a project given an specifications file
+- name: Create a project given nodes and links specs
   gns3_project:
     url: http://localhost
-    state: create
+    state: present
     project_name: new_lab
     nodes_spec:
         - name: alpine-1
@@ -150,16 +141,44 @@ EXAMPLES = """
         - ('alpine-1', 'eth0', 'alpine-2', 'eth1')
 
 # Delete a GNS3 project
-- name: Test failure of the module
+- name: Delete project
   gns3_project:
     url: http://localhost
-    state: delete
+    state: absent
     project_name: new_lab
 """
 
 RETURN = """
-message:
-    description: The output message that the test module generates
+name:
+    description: Project name
+    type: str
+    returned: always
+project_id:
+    description: Project UUID
+    type: str
+    returned: always
+status:
+    description: Project status. Possible values: opened, closed
+    type: str
+    returned: always
+path:
+    description: Path of the project on the server (works only with compute=local)
+    type: str
+    returned: always
+auto_close:
+    description: Project auto close when client cut off the notifications feed
+    type: bool
+    returned: always
+auto_open:
+    description: Project open when GNS3 start
+    type: bool
+    returned: always
+auto_start:
+    description: Project start when opened
+    type: bool
+    returned: always
+filename:
+    description: Project filename
     type: str
     returned: always
 """
