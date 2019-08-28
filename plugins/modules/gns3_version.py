@@ -1,26 +1,21 @@
 #!/usr/bin/env python
 
-# Copyright: (c) 2018, David Flores <davidflores7_8@hotmail.com>
-# GNU General Public License v3.0+ (see COPYING or
-# https://www.gnu.org/licenses/gpl-3.0.txt)
-
 ANSIBLE_METADATA = {
-    'metadata_version': '1.1',
+    'metadata_version': '1.2',
     'status': ['preview'],
     'supported_by': 'community'
 }
 
 DOCUMENTATION = '''
 ---
-module: gns3
-
+module: gns3_version
 short_description: Retrieves GNS3 server version
-
 version_added: "2.8"
-
 description:
     - "Retrieves GNS3 server version using gns3fy"
-
+requirements: [ gns3fy ]
+author:
+    - David Flores (@netpanda)
 options:
     url:
         description:
@@ -32,9 +27,6 @@ options:
             - TCP port to connect to server REST API
         type: int
         default: 3080
-
-author:
-    - David Flores (twitter -  @netpanda)
 '''
 
 EXAMPLES = '''
