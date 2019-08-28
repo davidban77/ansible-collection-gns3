@@ -12,11 +12,10 @@ module: gns3_project
 short_description: Module to interact with GNS3 server projects
 version_added: '2.8'
 description:
-    - 'Module to interact with GNS3 server projects. It is using the L(gns3fy library,
-    https://davidban77.github.io/gns3fy/)'
+    - 'Module to interact with GNS3 server projects.
+    - It is using the L(gns3fy library,https://davidban77.github.io/gns3fy/)'
     - It opens/closes projects and performs basic turnup/teradown operations on nodes.
-    - It creates/updates or deletes projects, with the respective nodes and links
-    specified
+    - It creates/updates or deletes projects.
 requirements: [ gns3fy ]
 author:
     - David Flores (@netpanda)
@@ -83,8 +82,8 @@ options:
         type: list
     links_spec:
         description:
-            - 'List of lists specifying the links endpoints. Example: C(- ['alpine-1',
-            'eth0', 'alpine-2', 'eth0'])'
+            - 'List of lists specifying the links endpoints. Example: C(- ["alpine-1",
+            "eth0", "alpine-2", "eth0"])'
             - 'Mandatory attributes: C(node_a), C(port_a), C(node_b) and C(port_b)'
         type: list
 """
