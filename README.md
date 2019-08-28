@@ -32,13 +32,20 @@ Here are some examples of how to use the module.
 
 ```yaml
 ---
-- name: Get the server version
-  gns3:
-    url: http://localhost
-    port: 3080
-  register: result
+- host: localhost
+  # Call the collections to use the respective modules
+  collections:
+    - davidban77.gns3
+  vars:
+    gns3_url: http://localhost
+  tasks:
+    - name: Get the server version
+    gns3_version:
+        url: "{{ gns3_url }}"
+        port: 3080
+    register: result
 
-- debug: var=result
+    - debug: var=result
 ```
 
 #### Manipulate GNS3 projects
@@ -48,14 +55,14 @@ Here are some examples of how to use the module.
 # Open a GNS3 project
 - name: Start lab
   gns3_project:
-    url: http://localhost
+    url: "{{ gns3_url }}"
     state: opened
     project_name: lab_example
 
 # Stop all nodes inside an open project
 - name: Stop nodes
   gns3_project:
-    url: http://localhost
+    url: "{{ gns3_url }}"
     state: opened
     project_name: lab_example
     nodes_state: stopped
@@ -65,7 +72,7 @@ Here are some examples of how to use the module.
 # Open a GNS3 project and start nodes one by one with a delay of 10sec between them
 - name: Start nodes one by one
   gns3_project:
-    url: http://localhost
+    url: "{{ gns3_url }}"
     state: opened
     project_name: lab_example
     nodes_state: started
@@ -75,7 +82,7 @@ Here are some examples of how to use the module.
 # Close a GNS3 project
 - name: Stop lab
   gns3_project:
-    url: http://localhost
+    url: "{{ gns3_url }}"
     state: closed
     project_id: "UUID-SOMETHING-1234567"
 ```
@@ -87,7 +94,7 @@ Here are some examples of how to use the module.
 # Create a GNS3 project given nodes and links specifications
 - name: Create a project
   gns3_project:
-    url: http://localhost
+    url: "{{ gns3_url }}"
     state: present
     project_name: new_lab
     nodes_spec:
@@ -103,7 +110,7 @@ Here are some examples of how to use the module.
 # Delete a GNS3 project
 - name: Delete project
   gns3_project:
-    url: http://localhost
+    url: "{{ gns3_url }}"
     state: absent
     project_name: new_lab
 ```
