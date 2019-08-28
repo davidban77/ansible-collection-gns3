@@ -17,11 +17,11 @@ mazer install davidban77.gns3
 
 ## Features
 
-- Open/closes projects
-- Starts/stops all nodes inside a project, or it can be done sequentially with a delay factor
+- Open/closes projects.
+- Starts/stops all nodes inside a project, or it can be done sequentially with a delay factor.
 - Creates/Updates projects with nodes and links specified as variables in a playbook.
-- Deletes projects safely by stopping nodes if there are, closing the project and finally deleting it.
-- Idempotency in all actions. For example if a playbook creates a project with some nodes, it will not recreate them if the palybook is rerun.
+- Deletes projects safely by stopping nodes, if there are any, then closing the project and finally deleting it.
+- Idempotency is present in all actions. An example could be reflected in a playbook that creates a project with nodes and links, these settings will not be executed again on a rerun (and by settings I mean projects settings, nodes and links)/
 
 
 ## Modules
@@ -30,8 +30,8 @@ These are the modules provided with this collection:
 
 - `gns3_version`: Retrieves GNS3 server version
 - `gns3_project`: Module to interact with GNS3 server projects
-    - It **opens/closes projects** and performs basic turnup/teradown operations on nodes.
-    - It **creates/updates or deletes projects**, with the respective nodes and links specified
+    - It opens/closes projects and performs basic turnup/teradown operations on nodes.
+    - It*creates/updates or deletes projects, with the respective nodes and links specified
 
 ## Examples
 
