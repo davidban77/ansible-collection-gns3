@@ -2,7 +2,7 @@ namespace: "davidban77"
 name: "gns3"
 version: "1.0.1"
 readme: "README.md"
-description: "Module to interact with GNS3 server REST API. It is using the https://davidban77.github.io/gns3fy/"
+description: "Module to interact with GNS3 server REST API based on gns3fy"
 authors:
     - "David Flores <davidflores7_8@hotmail.com>"
 dependencies:

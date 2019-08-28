@@ -1,9 +1,9 @@
 # Ansible Module for GNS3
-Ansible module repository for GNS3 Server REST API using [gns3fy - see the docs](https://davidban77.github.io/gns3fy/).
+[Ansible-Galaxy collections](https://docs.ansible.com/ansible/devel/dev_guide/collections_tech_preview.html) repository for GNS3 Server REST API using [gns3fy - see the docs](https://davidban77.github.io/gns3fy/).
 
 ## Installation
 
-For the module to be used you need to have installed [gns3](https://github.com/davidban77/gns3fy)
+For the module to be used you need to have installed [gns3fy](https://github.com/davidban77/gns3fy)
 
 ```
 pip install gns3fy

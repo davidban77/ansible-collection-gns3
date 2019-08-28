@@ -32,7 +32,7 @@ options:
 EXAMPLES = '''
 # Retrieve the GNS3 server version
 - name: Get the server version
-  gns3:
+  gns3_version:
     url: http://localhost
     port: 3080
   register: result
@@ -41,7 +41,7 @@ EXAMPLES = '''
 '''
 
 RETURN = '''
-local:
+local_compute:
     description: Whether this is a local server or not
     type: bool
     returned: always

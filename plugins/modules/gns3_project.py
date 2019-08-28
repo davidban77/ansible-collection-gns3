@@ -149,8 +149,36 @@ EXAMPLES = """
 """
 
 RETURN = """
-message:
-    description: The output message that the test module generates
+name:
+    description: Project name
+    type: str
+    returned: always
+project_id:
+    description: Project UUID
+    type: str
+    returned: always
+status:
+    description: Project status. Possible values: opened, closed
+    type: str
+    returned: always
+path:
+    description: Path of the project on the server (works only with compute=local)
+    type: str
+    returned: always
+auto_close:
+    description: Project auto close when client cut off the notifications feed
+    type: bool
+    returned: always
+auto_open:
+    description: Project open when GNS3 start
+    type: bool
+    returned: always
+auto_start:
+    description: Project start when opened
+    type: bool
+    returned: always
+filename:
+    description: Project filename
     type: str
     returned: always
 """
