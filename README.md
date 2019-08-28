@@ -15,6 +15,15 @@ This collections is packaged under ansible-galaxy, so to install it you need [ma
 mazer install davidban77.gns3
 ```
 
+## Features
+
+- Open/closes projects
+- Starts/stops all nodes inside a project, or it can be done sequentially with a delay factor
+- Creates/Updates projects with nodes and links specified as variables in a playbook.
+- Deletes projects safely by stopping nodes if there are, closing the project and finally deleting it.
+- Idempotency in all actions. For example if a playbook creates a project with some nodes, it will not recreate them if the palybook is rerun.
+
+
 ## Modules
 
 These are the modules provided with this collection:
