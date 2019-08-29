@@ -1,0 +1,8 @@
+- hosts: localhost
+  tasks:
+    - import_role:
+        name: create_lab
+      when: execute == "create"
+    - import_role:
+        name: delete_lab
+      when: execute == "delete"
