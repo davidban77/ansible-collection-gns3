@@ -31,9 +31,9 @@ These are the modules provided with this collection:
 - `gns3_version`: Retrieves GNS3 server version
 - `gns3_project`: Module to interact with GNS3 server projects
     - It opens/closes projects and performs basic turnup/teradown operations on nodes.
-    - It*creates/updates or deletes projects, with the respective nodes and links specified
+    - It creates/updates or deletes projects, with the respective nodes and links specified
 
-## Examples
+## Examples: using the module
 
 Here are some examples of how to use the module.
 
@@ -122,4 +122,59 @@ Here are some examples of how to use the module.
     url: "{{ gns3_url }}"
     state: absent
     project_name: new_lab
+```
+
+## Examples: using the roles
+
+There are also some convinient roles that you can use to manage your labs. Here is an example playbook:
+
+`main.yml`
+```yaml
+- hosts: localhost
+  tasks:
+    - import_role:
+        name: create_lab
+      when: execute == "create"
+    - import_role:
+        name: delete_lab
+      when: execute == "delete"
+```
+
+This way you can call and switch the behaviour of the playbook:
+
+**Create the lab**
+```
+ansible-playbook main.yml -e execute=create
+```
+
+Or **delete the lab**
+```
+ansible-playbook main.yml -e execute=delete
+```
+
+Here is the example variable file which specifies the naming convention used. You can see that the variable names come from the module itself with only `gns3_`
+
+```yaml
+---
+gns3_url: "http://dev_gns3server"
+gns3_project_name: test_ansible
+gns3_nodes_spec:
+    - name: veos-1
+      node_type: qemu
+      template: "vEOS-4.21.5F"
+    - name: veos-2
+      node_type: qemu
+      template: "vEOS-4.21.5F"
+    - name: ios-1
+      node_type: iou
+      template: "IOU-15.4"
+    - name: ios-2
+      node_type: iou
+      template: "IOU-15.4"
+gns3_nodes_strategy: one_by_one
+gns3_links_spec:
+    - ["veos-1", "Ethernet1", "veos-2", "Ethernet1"]
+    - ["veos-1", "Ethernet2", "ios-1", "Ethernet1/0"]
+    - ["veos-2", "Ethernet2", "ios-2", "Ethernet1/0"]
+    - ["ios-1", "Ethernet1/2", "ios-2", "Ethernet1/2"]
 ```

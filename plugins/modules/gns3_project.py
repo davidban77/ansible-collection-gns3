@@ -68,6 +68,7 @@ options:
             - Delay time in seconds to wait between nodes start/stop
             - Used when I(nodes_strategy) is C(one_by_one)
         type: int
+        default: 10
     poll_wait_time:
         description:
             - Delay in seconds to wait to poll nodes when they are started/stopped.
@@ -260,6 +261,8 @@ def create_link(link_spec, project, module):
     except ValueError as err:
         if "At least one port is used" in str(err):
             return False
+        else:
+            module.fail_json(msg=str(err), exception=traceback.format_exc())
     except Exception as err:
         module.fail_json(msg=str(err), exception=traceback.format_exc())
     return True
@@ -276,7 +279,7 @@ def main():
         project_id=dict(type="str", default=None),
         nodes_state=dict(type="str", choices=["started", "stopped"]),
         nodes_strategy=dict(type="str", choices=["all", "one_by_one"], default="all"),
-        nodes_delay=dict(type="int"),
+        nodes_delay=dict(type="int", default=10),
         poll_wait_time=dict(type="int", default=5),
         nodes_spec=dict(type="list"),
         links_spec=dict(type="list"),
@@ -374,10 +377,14 @@ def main():
     elif module.params["state"] == "absent":
         if pr_exists:
             # Stop nodes and close project to perform delete gracefully
+            if project.status != "opened":
+                # Project needs to be opened in order to be deleted...
+                project.open()
             project.stop_nodes(poll_wait_time=0)
-            project.close()
             project.delete()
-            result["change"] = True
+            result["changed"] = True
+        else:
+            module.exit_json(**result)
 
     # Return the project data
     result["project"] = return_project_data(project)
