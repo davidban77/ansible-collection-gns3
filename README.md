@@ -1,5 +1,5 @@
 # Ansible Module for GNS3
-[Ansible-Galaxy collections](https://docs.ansible.com/ansible/devel/dev_guide/collections_tech_preview.html) repository for GNS3 Server REST API using [gns3fy - see the docs](https://davidban77.github.io/gns3fy/).
+[Ansible-Galaxy collections](https://galaxy.ansible.com/davidban77/gns3) repository for GNS3 Server REST API using [gns3fy - see the docs](https://davidban77.github.io/gns3fy/).
 
 ## Installation
 
@@ -49,10 +49,10 @@ Here are some examples of how to use the module.
     gns3_url: http://localhost
   tasks:
     - name: Get the server version
-    gns3_version:
+      gns3_version:
         url: "{{ gns3_url }}"
         port: 3080
-    register: result
+      register: result
 
     - debug: var=result
 ```
