@@ -1,0 +1,30 @@
+---
+- name: Create Project
+  gns3_project:
+    url: "{{ gns3_url }}"
+    project_name: "{{ gns3_project_name }}"
+    state: present
+    nodes_spec: "{{ gns3_nodes_spec }}"
+    links_spec: "{{ gns3_links_spec | default(omit) }}"
+
+- name: Start nodes
+  when: gns3_nodes_strategy == "all"
+  gns3_project:
+    url: "{{ gns3_url }}"
+    project_name: "{{ gns3_project_name }}"
+    state: opened
+    nodes_state: started
+    nodes_strategy: all
+    poll_wait_time: "{{ gns3_poll_wait_time | default(omit) }}"
+
+# NOTE: This could potentially be a long task and might need to make it async if role
+# is executed on a remote host
+- name: Start nodes one by one
+  when: gns3_nodes_strategy == "one_by_one"
+  gns3_project:
+    url: "{{ gns3_url }}"
+    project_name: "{{ gns3_project_name }}"
+    state: opened
+    nodes_state: started
+    nodes_strategy: one_by_one
+    nodes_delay: "{{ gns3_nodes_delay | default(omit) }}"

@@ -1,0 +1,18 @@
+---
+galaxy_info:
+  author: David Flores
+  description: Deletes a GNS3 Lab by stopping nodes and deleting the project
+  min_ansible_version: 2.8
+  license: "MIT"
+  galaxy_tags:
+    - gns3
+    - gns3fy
+    - networking
+    - rest
+    - system
+    - netops
+  platforms:
+    - name: GenericLinux
+      versions:
+        - any
+dependencies: []

@@ -10,13 +10,12 @@ DOCUMENTATION = """
 ---
 module: gns3_project
 short_description: Module to interact with GNS3 server projects
-version_added: "2.8"
+version_added: '2.8'
 description:
-    - "Module to interact with GNS3 server projects. It is using the L(gns3fy library,
-    https://davidban77.github.io/gns3fy/)"
+    - 'Module to interact with GNS3 server projects.
+    - It is using the L(gns3fy library,https://davidban77.github.io/gns3fy/)'
     - It opens/closes projects and performs basic turnup/teradown operations on nodes.
-    - It creates/updates or deletes projects, with the respective nodes and links
-    specified
+    - It creates/updates or deletes projects.
 requirements: [ gns3fy ]
 author:
     - David Flores (@netpanda)
@@ -34,10 +33,10 @@ options:
     state:
         description:
             - State of the project to be on the GNS3 server
-            - "- C(opened): Opens a project and turns up nodes"
-            - "- C(closed): Closes a project and turns down nodes"
-            - "- C(present): Creates/update a project on the server"
-            - "- C(absent): Deletes a project on the server"
+            - '- C(opened): Opens a project and turns up nodes'
+            - '- C(closed): Closes a project and turns down nodes'
+            - '- C(present): Creates/update a project on the server'
+            - '- C(absent): Deletes a project on the server'
         type: str
         choices: ['opened', 'closed', 'present', 'absent']
     project_name:
@@ -57,9 +56,9 @@ options:
     nodes_strategy:
         description:
             - Start/stop strategy of the devices defined on the project.
-            - "- C(all): It starts/stops all nodes at once"
-            - "- C(one_by_one): It starts/stops nodes serialy using I(nodes_delay) time
-            between each action"
+            - '- C(all): It starts/stops all nodes at once'
+            - '- C(one_by_one): It starts/stops nodes serialy using I(nodes_delay) time
+            between each action'
             - Used when I(state) is C(opened)/C(closed)
         type: str
         choices: ['all', 'one_by_one']
@@ -69,6 +68,7 @@ options:
             - Delay time in seconds to wait between nodes start/stop
             - Used when I(nodes_strategy) is C(one_by_one)
         type: int
+        default: 10
     poll_wait_time:
         description:
             - Delay in seconds to wait to poll nodes when they are started/stopped.
@@ -78,14 +78,14 @@ options:
     nodes_spec:
         description:
             - List of dictionaries specifying the nodes properties.
-            - "- Mandatory attributes: C(name), C(node_type) and C(template)."
-            - "- Optional attributes: C(compute_id). It defaults to C(local)"
+            - '- Mandatory attributes: C(name), C(node_type) and C(template).'
+            - '- Optional attributes: C(compute_id). It defaults to C(local)'
         type: list
     links_spec:
         description:
-            - "List of lists specifying the links endpoints. Example: C(- ['alpine-1',
-            'eth0', 'alpine-2', 'eth0'])"
-            - "Mandatory attributes: C(node_a), C(port_a), C(node_b) and C(port_b)"
+            - 'List of lists specifying the links endpoints. Example: C(- ["alpine-1",
+            "eth0", "alpine-2", "eth0"])'
+            - 'Mandatory attributes: C(node_a), C(port_a), C(node_b) and C(port_b)'
         type: list
 """
 
@@ -122,7 +122,7 @@ EXAMPLES = """
   gns3_project:
     url: http://localhost
     state: closed
-    project_id: "UUID-SOMETHING-1234567"
+    project_id: 'UUID-SOMETHING-1234567'
 
 # Create a GNS3 project
 - name: Create a project given nodes and links specs
@@ -261,6 +261,8 @@ def create_link(link_spec, project, module):
     except ValueError as err:
         if "At least one port is used" in str(err):
             return False
+        else:
+            module.fail_json(msg=str(err), exception=traceback.format_exc())
     except Exception as err:
         module.fail_json(msg=str(err), exception=traceback.format_exc())
     return True
@@ -271,15 +273,13 @@ def main():
         url=dict(type="str", required=True),
         port=dict(type="int", default=3080),
         state=dict(
-            type="str",
-            required=True,
-            choices=["opened", "closed", "present", "absent"],
+            type="str", required=True, choices=["opened", "closed", "present", "absent"]
         ),
         project_name=dict(type="str", default=None),
         project_id=dict(type="str", default=None),
         nodes_state=dict(type="str", choices=["started", "stopped"]),
         nodes_strategy=dict(type="str", choices=["all", "one_by_one"], default="all"),
-        nodes_delay=dict(type="int"),
+        nodes_delay=dict(type="int", default=10),
         poll_wait_time=dict(type="int", default=5),
         nodes_spec=dict(type="list"),
         links_spec=dict(type="list"),
@@ -377,10 +377,14 @@ def main():
     elif module.params["state"] == "absent":
         if pr_exists:
             # Stop nodes and close project to perform delete gracefully
+            if project.status != "opened":
+                # Project needs to be opened in order to be deleted...
+                project.open()
             project.stop_nodes(poll_wait_time=0)
-            project.close()
             project.delete()
-            result["change"] = True
+            result["changed"] = True
+        else:
+            module.exit_json(**result)
 
     # Return the project data
     result["project"] = return_project_data(project)

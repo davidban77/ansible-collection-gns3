@@ -1,0 +1,6 @@
+---
+- name: Stop nodes and delete Project
+  gns3_project:
+    url: "{{ gns3_url }}"
+    project_name: "{{ gns3_project_name }}"
+    state: absent

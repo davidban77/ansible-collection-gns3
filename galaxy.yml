@@ -1,6 +1,6 @@
 namespace: "davidban77"
 name: "gns3"
-version: "1.0.1"
+version: "1.1.0"
 readme: "README.md"
 description: "Module to interact with GNS3 server REST API based on gns3fy"
 authors:
@@ -13,7 +13,7 @@ tags:
     - gns3fy
     - networking
     - rest
-    - simulator
+    - system
     - netops
 repository: "https://github.com/davidban77/ansible-collection-gns3"
 documentation: "https://github.com/davidban77/ansible-collection-gns3/blob/master/README.md"
