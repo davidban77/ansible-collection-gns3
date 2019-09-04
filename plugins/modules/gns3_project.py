@@ -187,14 +187,14 @@ import time
 import traceback
 from ansible.module_utils.basic import AnsibleModule, missing_required_lib
 
-LIB_IMP_ERR = None
+GNS3FY_IMP_ERR = None
 try:
     from gns3fy import Gns3Connector, Project
 
-    HAS_LIB = True
+    HAS_GNS3FY = True
 except Exception:
-    HAS_LIB = False
-    LIB_IMP_ERR = traceback.format_exc()
+    HAS_GNS3FY = False
+    GNS3FY_IMP_ERR = traceback.format_exc()
 
 
 def return_project_data(project):
@@ -291,8 +291,8 @@ def main():
         required_one_of=[["project_name", "project_id"]],
         required_if=[["nodes_strategy", "one_by_one", ["nodes_delay"]]],
     )
-    if not HAS_LIB:
-        module.fail_json(msg=missing_required_lib("gns3fy"), exception=LIB_IMP_ERR)
+    if not HAS_GNS3FY:
+        module.fail_json(msg=missing_required_lib("gns3fy"), exception=GNS3FY_IMP_ERR)
     if module.check_mode:
         module.exit_json(**result)
 

@@ -1,8 +1,26 @@
 - hosts: localhost
   tasks:
-    - import_role:
-        name: create_lab
+    - name: Get server version
+      gns3_version:
+        url: "{{ gns3_url }}"
+      register: version
+
+    - debug: var=version
+
+    - name: Creation/Active section
       when: execute == "create"
+      block:
+        - import_role:
+            name: create_lab
+
+        - name: Get nodes inventory
+          gns3_nodes_inventory:
+            url: "{{ gns3_url }}"
+            project_name: "{{ gns3_project_name }}"
+          register: nodes_inventory
+
+        - debug: var=nodes_inventory
+
     - import_role:
         name: delete_lab
       when: execute == "delete"
