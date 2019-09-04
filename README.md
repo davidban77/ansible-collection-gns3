@@ -56,6 +56,25 @@ Here are some examples of how to use the module.
 
     - debug: var=result
 ```
+#### Get nodes_inventory information from a project
+
+```yaml
+---
+- host: localhost
+  # Call the collections to use the respective modules
+  collections:
+    - davidban77.gns3
+  vars:
+    gns3_url: http://localhost
+  tasks:
+    - name: Get the server version
+      gns3_nodes_inventory:
+        url: "{{ gns3_url }}"
+        project_name: lab_example
+      register: result
+
+    - debug: var=result
+```
 
 #### Manipulate GNS3 projects
 
