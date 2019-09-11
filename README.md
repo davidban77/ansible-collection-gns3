@@ -127,10 +127,8 @@ Here are some examples of how to use the module.
     project_name: new_lab
     nodes_spec:
         - name: alpine-1
-          node_type: docker
           template: alpine
         - name: alpine-2
-          node_type: docker
           template: alpine
     links_spec:
         - ['alpine-1', 'eth0', 'alpine-2', 'eth1']
@@ -179,16 +177,12 @@ gns3_url: "http://dev_gns3server"
 gns3_project_name: test_ansible
 gns3_nodes_spec:
     - name: veos-1
-      node_type: qemu
       template: "vEOS-4.21.5F"
     - name: veos-2
-      node_type: qemu
       template: "vEOS-4.21.5F"
     - name: ios-1
-      node_type: iou
       template: "IOU-15.4"
     - name: ios-2
-      node_type: iou
       template: "IOU-15.4"
 gns3_nodes_strategy: one_by_one
 gns3_links_spec:
