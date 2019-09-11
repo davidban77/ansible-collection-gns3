@@ -6,6 +6,7 @@ New features:
 
 - Modules:
     - `gns3_nodes_inventory`: Returns inventory-style dictionary of the nodes.
+- No more `node_type` needed when creating nodes in a project.
 
 Fixes:
 
