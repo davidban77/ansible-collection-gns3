@@ -1,12 +1,17 @@
 # Releases
 
+## 1.2.1
+
+Enhancement:
+
+- No more `node_type` needed when creating nodes in a project.
+
 ## 1.2.0
 
 New features:
 
 - Modules:
     - `gns3_nodes_inventory`: Returns inventory-style dictionary of the nodes.
-- No more `node_type` needed when creating nodes in a project.
 
 Fixes:
 
