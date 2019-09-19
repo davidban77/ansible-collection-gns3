@@ -1,6 +1,6 @@
 namespace: "davidban77"
 name: "gns3"
-version: "1.2.1"
+version: "1.2.2"
 readme: "README.md"
 description: "Module to interact with GNS3 server REST API based on gns3fy"
 authors:
