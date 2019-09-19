@@ -7,9 +7,9 @@ gns3_nodes_spec:
     - name: veos-2
       template: "vEOS-4.21.5F"
     - name: ios-1
-      template: "IOU-15.4"
+      template: "IOU-L2-15.1"
     - name: ios-2
-      template: "IOU-15.4"
+      template: "IOU-L3-15.4"
 gns3_nodes_strategy: one_by_one
 gns3_links_spec:
     - ["veos-1", "Ethernet1", "veos-2", "Ethernet1"]
