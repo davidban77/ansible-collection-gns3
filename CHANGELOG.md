@@ -1,5 +1,9 @@
 # Releases
 
+## 1.2.2.
+
+- Upgrading to `gns3fy ^0.4.0`
+
 ## 1.2.1
 
 Enhancement:
