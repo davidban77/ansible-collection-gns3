@@ -1,0 +1,22 @@
+- hosts: localhost
+  tasks:
+    - name: Play with a dummy file to node
+      gns3_node_file:
+        url: "{{ gns3_url }}"
+        project_name: "{{ gns3_project_name }}"
+        node_name: alpine-1
+        state: present
+        dest: /etc/network/dummy_file
+        data: |
+          # Some data to insert on the file
+          auto eth0
+          iface eth0 inect dhcp
+
+    - name: Play with a dummy file on project
+      gns3_project_file:
+        url: "{{ gns3_url }}"
+        project_name: "{{ gns3_project_name }}"
+        state: present
+        dest: README.txt
+        data: |
+          Hello! this is a README

@@ -10,9 +10,12 @@ gns3_nodes_spec:
       template: "IOU-L2-15.1"
     - name: ios-2
       template: "IOU-L3-15.4"
+    - name: alpine-1
+      template: "alpine"
 gns3_nodes_strategy: one_by_one
 gns3_links_spec:
     - ["veos-1", "Ethernet1", "veos-2", "Ethernet1"]
     - ["veos-1", "Ethernet2", "ios-1", "Ethernet1/0"]
     - ["veos-2", "Ethernet2", "ios-2", "Ethernet1/0"]
     - ["ios-1", "Ethernet1/2", "ios-2", "Ethernet1/2"]
+    - ["ios-1", "Ethernet1/3", "alpine-1", "eth0"]

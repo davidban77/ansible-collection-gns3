@@ -10,5 +10,15 @@ publish: build
 test-create-lab:
 	cd test/playbooks; ansible-playbook main.yml -e execute=create
 
+test-create-files:
+	cd test/playbooks; ansible-playbook create_files.yml
+
+test-delete-files:
+	cd test/playbooks; ansible-playbook delete_files.yml
+
 test-delete-lab:
 	cd test/playbooks; ansible-playbook main.yml -e execute=delete
+
+test-create-env: test-create-lab test-create-files
+
+test-delete-env: test-delete-files test-delete-lab
