@@ -1,5 +1,11 @@
 # Releases
 
+## 1.3.0
+
+- Added `gns3_node_file` and `gns3_project_file` modules.
+- Improved the Makefile
+- Added alpine node to the tests
+
 ## 1.2.2.
 
 - Upgrading to `gns3fy ^0.4.0`

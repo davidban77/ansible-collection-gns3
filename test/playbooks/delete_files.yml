@@ -1,0 +1,16 @@
+- hosts: localhost
+  tasks:
+    - name: Play with a dummy file to node
+      gns3_node_file:
+        url: "{{ gns3_url }}"
+        project_name: "{{ gns3_project_name }}"
+        node_name: alpine-1
+        state: absent
+        dest: /etc/network/dummy_file
+
+    - name: Play with a dummy file on project
+      gns3_project_file:
+        url: "{{ gns3_url }}"
+        project_name: "{{ gns3_project_name }}"
+        state: absent
+        dest: README.txt
