@@ -1,0 +1,28 @@
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Reload a node alpine node which requires a special reload
+      gns3_node:
+        url: "{{ gns3_url }}"
+        project_name: "{{ gns3_project_name }}"
+        node_name: alpine-1
+        state: reload
+        retry: yes
+        poll_wait_time: 30
+
+    - name: Stop ios-1
+      gns3_node:
+        url: "{{ gns3_url }}"
+        project_name: "{{ gns3_project_name }}"
+        node_name: ios-1
+        state: stopped
+
+    - name: Start ios-1
+      gns3_node:
+        url: "{{ gns3_url }}"
+        project_name: "{{ gns3_project_name }}"
+        node_name: ios-1
+        state: started
+      register: node
+
+    - debug: var=node

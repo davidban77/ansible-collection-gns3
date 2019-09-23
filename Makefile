@@ -10,6 +10,9 @@ publish: build
 test-create-lab:
 	cd test/playbooks; ansible-playbook main.yml -e execute=create
 
+test-node-interaction:
+	cd test/playbooks; ansible-playbook node_interaction.yml
+
 test-create-files:
 	cd test/playbooks; ansible-playbook create_files.yml
 
@@ -19,6 +22,6 @@ test-delete-files:
 test-delete-lab:
 	cd test/playbooks; ansible-playbook main.yml -e execute=delete
 
-test-create-env: test-create-lab test-create-files
+test-create-all: test-create-lab test-create-files test-node-interaction
 
-test-delete-env: test-delete-files test-delete-lab
+test-delete-all: test-delete-files test-delete-lab
