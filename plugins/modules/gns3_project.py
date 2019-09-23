@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 ANSIBLE_METADATA = {
-    "metadata_version": "1.2",
+    "metadata_version": "1.3",
     "status": ["preview"],
     "supported_by": "community",
 }
@@ -152,35 +152,27 @@ RETURN = """
 name:
     description: Project name
     type: str
-    returned: always
 project_id:
     description: Project UUID
     type: str
-    returned: always
 status:
     description: Project status. Possible values: opened, closed
     type: str
-    returned: always
 path:
     description: Path of the project on the server (works only with compute=local)
     type: str
-    returned: always
 auto_close:
     description: Project auto close when client cut off the notifications feed
     type: bool
-    returned: always
 auto_open:
     description: Project open when GNS3 start
     type: bool
-    returned: always
 auto_start:
     description: Project start when opened
     type: bool
-    returned: always
 filename:
     description: Project filename
     type: str
-    returned: always
 """
 
 import time
@@ -211,37 +203,39 @@ def return_project_data(project):
     )
 
 
-def nodes_state_verification(module, project, result):
+# def nodes_state_verification(module, project, result):
+def nodes_state_verification(
+    expected_nodes_state, nodes_strategy, nodes_delay, poll_wait_time, project
+):
     "Verifies each node state and returns a changed attribute"
     nodes_statuses = [node.status for node in project.nodes]
-    expected_state = module.params["nodes_state"]
 
     # Verify if nodes do not match expected state
-    if expected_state == "started" and any(
+    if expected_nodes_state == "started" and any(
         status == "stopped" for status in nodes_statuses
     ):
         # Turnup the nodes based on strategy
-        if module.params["nodes_strategy"] == "all":
-            project.start_nodes(poll_wait_time=module.params["poll_wait_time"])
-        elif module.params["nodes_strategy"] == "one_by_one":
+        if nodes_strategy == "all":
+            project.start_nodes(poll_wait_time=poll_wait_time)
+        elif nodes_strategy == "one_by_one":
             for node in project.nodes:
                 if node.status != "started":
                     node.start()
-                    time.sleep(module.params["nodes_delay"])
-        result["changed"] = True
-    elif expected_state == "stopped" and any(
+                    time.sleep(nodes_delay)
+        return True
+    elif expected_nodes_state == "stopped" and any(
         status == "started" for status in nodes_statuses
     ):
         # Shutdown nodes based on strategy
-        if module.params["nodes_strategy"] == "all":
-            project.stop_nodes(poll_wait_time=module.params["poll_wait_time"])
-        elif module.params["nodes_strategy"] == "one_by_one":
+        if nodes_strategy == "all":
+            project.stop_nodes(poll_wait_time=poll_wait_time)
+        elif nodes_strategy == "one_by_one":
             for node in project.nodes:
                 if node.status != "stopped":
                     node.stop()
-                    time.sleep(module.params["nodes_delay"])
-        result["changed"] = True
-    # if no match then there are no changes on the nodes to perform
+                    time.sleep(nodes_delay)
+        return True
+    return False
 
 
 def create_node(node_spec, project, module):
@@ -269,41 +263,60 @@ def create_link(link_spec, project, module):
 
 
 def main():
-    module_args = dict(
-        url=dict(type="str", required=True),
-        port=dict(type="int", default=3080),
-        state=dict(
-            type="str", required=True, choices=["opened", "closed", "present", "absent"]
-        ),
-        project_name=dict(type="str", default=None),
-        project_id=dict(type="str", default=None),
-        nodes_state=dict(type="str", choices=["started", "stopped"]),
-        nodes_strategy=dict(type="str", choices=["all", "one_by_one"], default="all"),
-        nodes_delay=dict(type="int", default=10),
-        poll_wait_time=dict(type="int", default=5),
-        nodes_spec=dict(type="list"),
-        links_spec=dict(type="list"),
-    )
-    result = dict(changed=False)
     module = AnsibleModule(
-        argument_spec=module_args,
+        argument_spec=dict(
+            url=dict(type="str", required=True),
+            port=dict(type="int", default=3080),
+            state=dict(
+                type="str",
+                required=True,
+                choices=["opened", "closed", "present", "absent"],
+            ),
+            project_name=dict(type="str", default=None),
+            project_id=dict(type="str", default=None),
+            nodes_state=dict(type="str", choices=["started", "stopped"]),
+            nodes_strategy=dict(
+                type="str", choices=["all", "one_by_one"], default="all"
+            ),
+            nodes_delay=dict(type="int", default=10),
+            poll_wait_time=dict(type="int", default=5),
+            nodes_spec=dict(type="list"),
+            links_spec=dict(type="list"),
+        ),
         supports_check_mode=True,
         required_one_of=[["project_name", "project_id"]],
         required_if=[["nodes_strategy", "one_by_one", ["nodes_delay"]]],
     )
+    result = dict(changed=False)
     if not HAS_GNS3FY:
         module.fail_json(msg=missing_required_lib("gns3fy"), exception=GNS3FY_IMP_ERR)
     if module.check_mode:
         module.exit_json(**result)
 
-    # Create server session
-    server = Gns3Connector(url=f"{module.params['url']}:{module.params['port']}")
-    # Define the project
-    if module.params["project_name"] is not None:
-        project = Project(name=module.params["project_name"], connector=server)
-    elif module.params["project_id"] is not None:
-        project = Project(project_id=module.params["project_id"], connector=server)
+    server_url = module.params["url"]
+    server_port = module.params["port"]
+    state = module.params["state"]
+    project_name = module.params["project_name"]
+    project_id = module.params["project_id"]
+    nodes_state = module.params["nodes_state"]
+    nodes_strategy = module.params["nodes_strategy"]
+    nodes_delay = module.params["nodes_delay"]
+    poll_wait_time = module.params["poll_wait_time"]
+    nodes_spec = module.params["nodes_spec"]
+    links_spec = module.params["links_spec"]
 
+    try:
+        # Create server session
+        server = Gns3Connector(url=f"{server_url}:{server_port}")
+        # Define the project
+        if project_name is not None:
+            project = Project(name=project_name, connector=server)
+        elif project_id is not None:
+            project = Project(project_id=project_id, connector=server)
+    except Exception as err:
+        module.fail_json(msg=str(err), **result)
+
+    #  Retrieve project information
     try:
         project.get()
         pr_exists = True
@@ -311,29 +324,41 @@ def main():
         pr_exists = False
         reason = str(err)
 
-    if module.params["state"] == "opened":
+    if state == "opened":
         if pr_exists:
             if project.status != "opened":
                 # Open project
                 project.open()
 
                 # Now verify nodes
-                if module.params["nodes_state"] is not None:
+                if nodes_state is not None:
 
                     # Change flag based on the nodes state
-                    nodes_state_verification(module, project, result)
+                    result["changed"] = nodes_state_verification(
+                        expected_nodes_state=nodes_state,
+                        nodes_strategy=nodes_strategy,
+                        nodes_delay=nodes_delay,
+                        poll_wait_time=poll_wait_time,
+                        project=project,
+                    )
                 else:
                     # Means that nodes are not taken into account for idempotency
                     result["changed"] = True
             # Even if the project is open if nodes_state has been set, check it
             else:
-                if module.params["nodes_state"] is not None:
-                    nodes_state_verification(module, project, result)
+                if nodes_state is not None:
+                    result["changed"] = nodes_state_verification(
+                        expected_nodes_state=nodes_state,
+                        nodes_strategy=nodes_strategy,
+                        nodes_delay=nodes_delay,
+                        poll_wait_time=poll_wait_time,
+                        project=project,
+                    )
 
         else:
             module.fail_json(msg=reason, **result)
 
-    elif module.params["state"] == "closed":
+    elif state == "closed":
         if pr_exists:
             if project.status != "closed":
                 # Close project
@@ -342,19 +367,19 @@ def main():
         else:
             module.fail_json(msg=reason, **result)
 
-    elif module.params["state"] == "present":
+    elif state == "present":
         if pr_exists:
-            if module.params["nodes_spec"] is not None:
+            if nodes_spec is not None:
                 # Need to verify if nodes exist
                 _nodes_already_created = [node.name for node in project.nodes]
-                for node_spec in module.params["nodes_spec"]:
+                for node_spec in nodes_spec:
                     if node_spec["name"] not in _nodes_already_created:
                         # Open the project in case it was closed
                         project.open()
                         create_node(node_spec, project, module)
                         result["changed"] = True
-            if module.params["links_spec"] is not None:
-                for link_spec in module.params["links_spec"]:
+            if links_spec is not None:
+                for link_spec in links_spec:
                     project.open()
                     # Trigger another get to refresh nodes attributes
                     project.get()
@@ -366,15 +391,15 @@ def main():
             # Create project
             project.create()
             # Nodes section
-            if module.params["nodes_spec"] is not None:
-                for node_spec in module.params["nodes_spec"]:
+            if nodes_spec is not None:
+                for node_spec in nodes_spec:
                     create_node(node_spec, project, module)
             # Links section
-            if module.params["links_spec"] is not None:
-                for link_spec in module.params["links_spec"]:
+            if links_spec is not None:
+                for link_spec in links_spec:
                     create_link(link_spec, project, module)
             result["changed"] = True
-    elif module.params["state"] == "absent":
+    elif state == "absent":
         if pr_exists:
             # Stop nodes and close project to perform delete gracefully
             if project.status != "opened":

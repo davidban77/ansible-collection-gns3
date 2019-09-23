@@ -1,6 +1,17 @@
 # Releases
 
+## 1.4.0
+
+**Enhacements:**
+
+- Added `gns3_node` to interact with the node inside a project. Provides the following:
+    - `start/stop/suspend/reload`: Actions to be applied on the node. These are idempotent with the exception of `reload`.
+    - Special flags like `retry` for an action to be applied a second time just in case... And a `force_project_open` to interact with a device if the project is closed
+- Refactored `gns3_project` to be more pythonic
+
 ## 1.3.0
+
+**Enhancements:**
 
 - Added `gns3_node_file` and `gns3_project_file` modules.
 - Improved the Makefile
@@ -8,22 +19,24 @@
 
 ## 1.2.2.
 
+**Fixes:**
+
 - Upgrading to `gns3fy ^0.4.0`
 
 ## 1.2.1
 
-Enhancement:
+**Enhancements:**
 
 - No more `node_type` needed when creating nodes in a project.
 
 ## 1.2.0
 
-New features:
+**Enhancements:**
 
 - Modules:
     - `gns3_nodes_inventory`: Returns inventory-style dictionary of the nodes.
 
-Fixes:
+**Fixes:**
 
 - Modules:
     - Error when using the `gns3_version` module when `gns3fy` is not installed
@@ -33,7 +46,7 @@ Fixes:
 
 ## 1.1.0
 
-New features:
+**Enhancements:**
 
 - Roles:
     - `create_lab`: Create a GNS3 Lab by creating a project and starting up the nodes
