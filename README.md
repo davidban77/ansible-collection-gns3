@@ -21,6 +21,8 @@ mazer install davidban77.gns3
 - Starts/stops all nodes inside a project, or it can be done sequentially with a delay factor.
 - Creates/Updates projects with nodes and links specified as variables in a playbook.
 - Deletes projects safely by stopping nodes, if there are any, then closing the project and finally deleting it.
+- Creates/Deletes/Restores snapshots of projects.
+- Retrieves information about available emulators on the GNS3 server compute, as well as available images, console ports, version, etc..
 - Idempotency is present in all actions. An example could be reflected in a playbook that creates a project with nodes and links, these settings will not be executed again on a rerun (and by settings I mean projects settings, nodes and links)/
 
 
