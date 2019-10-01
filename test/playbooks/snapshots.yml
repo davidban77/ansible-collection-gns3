@@ -1,0 +1,39 @@
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Stop nodes on the project
+      gns3_project:
+        url: "{{ gns3_url }}"
+        project_name: "{{ gns3_project_name }}"
+        state: opened
+        nodes_state: stopped
+
+    - name: Create snapshot
+      gns3_snapshot:
+        url: "{{ gns3_url }}"
+        project_name: "{{ gns3_project_name }}"
+        snapshot_name: snap
+        state: present
+      register: resultado
+
+    - debug: var=resultado
+
+    - pause:
+        minutes: 1
+
+    - name: Restore snapshot
+      gns3_snapshot:
+        url: "{{ gns3_url }}"
+        project_name: "{{ gns3_project_name }}"
+        snapshot_name: snap
+        state: restore
+
+    - pause:
+        minutes: 1
+
+    - name: Delete snapshot
+      gns3_snapshot:
+        url: "{{ gns3_url }}"
+        project_name: "{{ gns3_project_name }}"
+        snapshot_name: snap
+        state: absent

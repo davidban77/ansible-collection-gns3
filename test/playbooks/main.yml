@@ -1,11 +1,13 @@
 - hosts: localhost
   tasks:
     - name: Get server version
-      gns3_version:
+      gns3_facts:
         url: "{{ gns3_url }}"
-      register: version
+        get_images: all
+        get_compute_ports: yes
+      register: resultado
 
-    - debug: var=version
+    - debug: var=resultado
 
     - name: Creation/Active section
       when: execute == "create"
