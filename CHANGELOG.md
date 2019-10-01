@@ -1,5 +1,17 @@
 # Releases
 
+## 1.5.0
+
+**Enhancements:**
+
+- Added `gns3_facts` to retrieve the compute information like: console ports, server version, available emulators, available images, etc..
+- Added `gns3_snapshot` to manipulate the snapshot creation/deletion and restoration of a project.
+
+**Fixes:**
+
+- Added the needed `user` and `password` arguments to all the modules, when interacting with a GNS3 server with authentication.
+- Refactored the modules a little to be more standard with each other.
+
 ## 1.4.0
 
 **Enhacements:**

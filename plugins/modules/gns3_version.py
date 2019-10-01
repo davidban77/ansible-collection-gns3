@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 ANSIBLE_METADATA = {
-    "metadata_version": "1.2",
+    "metadata_version": "1.3",
     "status": ["preview"],
     "supported_by": "community",
 }
@@ -15,7 +15,7 @@ description:
     - 'Retrieves GNS3 server version using gns3fy'
 requirements: [ gns3fy ]
 author:
-    - David Flores (@netpanda)
+    - David Flores (@davidban77)
 options:
     url:
         description:
@@ -27,6 +27,14 @@ options:
             - TCP port to connect to server REST API
         type: int
         default: 3080
+    user:
+        description:
+            - User to connect to GNS3 server
+        type: str
+    password:
+        description:
+            - Password to connect to GNS3 server
+        type: str
 """
 
 EXAMPLES = """
@@ -66,14 +74,23 @@ except Exception:
 def main():
     module = AnsibleModule(
         argument_spec=dict(
-            url=dict(type="str", required=True), port=dict(type="int", default=3080)
+            url=dict(type="str", required=True),
+            port=dict(type="int", default=3080),
+            user=dict(type="str", default=None),
+            password=dict(type="str", default=None, no_log=True),
         )
     )
     if not HAS_GNS3FY:
         module.fail_json(msg=missing_required_lib("gns3fy"), exception=GNS3FY_IMP_ERR)
     result = dict(changed=False, local_compute=None, version=None)
+    server_url = module.params["url"]
+    server_port = module.params["port"]
+    server_user = module.params["user"]
+    server_password = module.params["password"]
 
-    server = Gns3Connector(url=f"{module.params['url']}:{module.params['port']}")
+    server = Gns3Connector(
+        url=f"{server_url}:{server_port}", user=server_user, cred=server_password
+    )
     _version = server.get_version()
     result.update(local_compute=_version["local"], version=_version["version"])
     module.exit_json(**result)

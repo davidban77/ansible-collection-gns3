@@ -28,10 +28,16 @@ mazer install davidban77.gns3
 
 These are the modules provided with this collection:
 
-- `gns3_version`: Retrieves GNS3 server version
+- `gns3_version`: Retrieves GNS3 server version. (**TO BE DEPRECATED** with the `gns3_facts` module)
+- `gns3_facts`: Retrieves the compute(s) information of a GNS3 server
 - `gns3_project`: Module to interact with GNS3 server projects
     - It opens/closes projects and performs basic turnup/teradown operations on nodes.
     - It creates/updates or deletes projects, with the respective nodes and links specified
+- `gns3_project_file`: Updates/creates a file on a project directory.
+- `gns3_snapshot`: Module that interacts with snapshots of a project on GNS3 server.
+- `gns3_node`: Module to operate a node in a GNS3 server project.
+- `gns3_node_file`: Updates/creates a file on a node directory.
+- `gns3_nodes_inventory`: Retrieves GNS3 a project nodes console information.
 
 ## Examples: using the module
 
@@ -48,10 +54,12 @@ Here are some examples of how to use the module.
   vars:
     gns3_url: http://localhost
   tasks:
-    - name: Get the server version
-      gns3_version:
+    - name: Get the server facts
+      gns3_facts:
         url: "{{ gns3_url }}"
         port: 3080
+        get_images: all
+        get_compute_ports: yes
       register: result
 
     - debug: var=result
@@ -191,3 +199,7 @@ gns3_links_spec:
     - ["veos-2", "Ethernet2", "ios-2", "Ethernet1/0"]
     - ["ios-1", "Ethernet1/2", "ios-2", "Ethernet1/2"]
 ```
+
+### More examples
+
+For more examples like create an `/etc/network/interfaces` file for an `alpine` docker node to configure its network interfaces, or restore a project to an specific snapshot, you can go to the `test/playbooks` directory.

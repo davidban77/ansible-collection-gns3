@@ -1,0 +1,18 @@
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Retrieve computes info all
+      gns3_facts:
+        url: "{{ gns3_url }}"
+        get_images: iou
+        get_compute_ports: no
+      register: resultado
+
+    - debug: var=resultado
+
+    # - name: Retrieves basic facts
+    #   gns3_facts:
+    #     url: "{{ gns3_url }}"
+    #   register: resultado
+
+    # - debug: var=resultado

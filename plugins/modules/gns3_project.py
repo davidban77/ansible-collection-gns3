@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 ANSIBLE_METADATA = {
-    "metadata_version": "1.3",
+    "metadata_version": "1.4",
     "status": ["preview"],
     "supported_by": "community",
 }
@@ -18,7 +18,7 @@ description:
     - It creates/updates or deletes projects.
 requirements: [ gns3fy ]
 author:
-    - David Flores (@netpanda)
+    - David Flores (@davidban77)
 options:
     url:
         description:
@@ -30,6 +30,14 @@ options:
             - TCP port to connect to server REST API
         type: int
         default: 3080
+    user:
+        description:
+            - User to connect to GNS3 server
+        type: str
+    password:
+        description:
+            - Password to connect to GNS3 server
+        type: str
     state:
         description:
             - State of the project to be on the GNS3 server
@@ -267,6 +275,8 @@ def main():
         argument_spec=dict(
             url=dict(type="str", required=True),
             port=dict(type="int", default=3080),
+            user=dict(type="str", default=None),
+            password=dict(type="str", default=None, no_log=True),
             state=dict(
                 type="str",
                 required=True,
@@ -295,6 +305,8 @@ def main():
 
     server_url = module.params["url"]
     server_port = module.params["port"]
+    server_user = module.params["user"]
+    server_password = module.params["password"]
     state = module.params["state"]
     project_name = module.params["project_name"]
     project_id = module.params["project_id"]
@@ -307,7 +319,9 @@ def main():
 
     try:
         # Create server session
-        server = Gns3Connector(url=f"{server_url}:{server_port}")
+        server = Gns3Connector(
+            url=f"{server_url}:{server_port}", user=server_user, cred=server_password
+        )
         # Define the project
         if project_name is not None:
             project = Project(name=project_name, connector=server)
