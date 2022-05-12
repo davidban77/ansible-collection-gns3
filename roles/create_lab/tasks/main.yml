@@ -2,6 +2,7 @@
 - name: Create Project
   gns3_project:
     url: "{{ gns3_url }}"
+    port: "{{ gns3_port }}"
     project_name: "{{ gns3_project_name }}"
     state: present
     nodes_spec: "{{ gns3_nodes_spec }}"
@@ -11,6 +12,7 @@
   when: gns3_nodes_strategy == "all"
   gns3_project:
     url: "{{ gns3_url }}"
+    port: "{{ gns3_port }}"
     project_name: "{{ gns3_project_name }}"
     state: opened
     nodes_state: started
@@ -23,6 +25,7 @@
   when: gns3_nodes_strategy == "one_by_one"
   gns3_project:
     url: "{{ gns3_url }}"
+    port: "{{ gns3_port }}"
     project_name: "{{ gns3_project_name }}"
     state: opened
     nodes_state: started
