@@ -5,7 +5,7 @@ readme: "README.md"
 description: "Module to interact with GNS3 server REST API based on gns3fy"
 authors:
     - "David Flores <davidflores7_8@hotmail.com>"
-dependencies:
+dependencies: {}
 license:
     - "MIT"
 tags:
