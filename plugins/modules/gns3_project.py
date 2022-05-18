@@ -247,6 +247,9 @@ def nodes_state_verification(
 
 
 def create_node(node_spec, project, module):
+    # get rid of any custom properties
+    node_spec.pop('customProperties', None)
+
     "Creates the node specified in nodes_spec"
     # If exceptions occur then print them out in ansible format
     try:
