@@ -51,6 +51,10 @@ options:
         description:
             - Project name
         type: str
+    project_path:
+        description:
+            - Project path (Ignore in name not specified)
+        type: str
     project_id:
         description:
             - Project ID
@@ -283,6 +287,7 @@ def main():
                 choices=["opened", "closed", "present", "absent"],
             ),
             project_name=dict(type="str", default=None),
+            project_path=dict(type="str", default=None),
             project_id=dict(type="str", default=None),
             nodes_state=dict(type="str", choices=["started", "stopped"]),
             nodes_strategy=dict(
@@ -309,6 +314,7 @@ def main():
     server_password = module.params["password"]
     state = module.params["state"]
     project_name = module.params["project_name"]
+    project_path = module.params["project_path"]
     project_id = module.params["project_id"]
     nodes_state = module.params["nodes_state"]
     nodes_strategy = module.params["nodes_strategy"]
@@ -324,7 +330,7 @@ def main():
         )
         # Define the project
         if project_name is not None:
-            project = Project(name=project_name, connector=server)
+            project = Project(name=project_name, path=project_path, connector=server)
         elif project_id is not None:
             project = Project(project_id=project_id, connector=server)
     except Exception as err:
@@ -346,7 +352,6 @@ def main():
 
                 # Now verify nodes
                 if nodes_state is not None:
-
                     # Change flag based on the nodes state
                     result["changed"] = nodes_state_verification(
                         expected_nodes_state=nodes_state,
