@@ -55,6 +55,14 @@ options:
         description:
             - Project ID
         type: str
+    scene_height:
+        description:
+            - Height of the GNS3 project
+        type: int
+    scene_height:
+        description:
+            - Width of the GNS3 project
+        type: int
     nodes_state:
         description:
             - Starts/stops nodes on the project.
@@ -147,6 +155,8 @@ EXAMPLES = """
           template: alpine
     links_spec:
         - ('alpine-1', 'eth0', 'alpine-2', 'eth1')
+    scene_height: 4000
+    scene_width: 2000
 
 # Delete a GNS3 project
 - name: Delete project
@@ -181,6 +191,12 @@ auto_start:
 filename:
     description: Project filename
     type: str
+scene_height:
+    description: Height of the GNS3 project
+    type: int
+scene_height:
+    description: Width of the GNS3 project
+    type: int
 """
 
 import time
@@ -208,6 +224,8 @@ def return_project_data(project):
         auto_open=project.auto_open,
         auto_start=project.auto_start,
         filename=project.filename,
+        scene_height=project.scene_height,
+        scene_width=project.scene_width,
     )
 
 
@@ -284,6 +302,8 @@ def main():
             ),
             project_name=dict(type="str", default=None),
             project_id=dict(type="str", default=None),
+            scene_height=dict(type="int", default=1000),
+            scene_width=dict(type="int", default=2000),
             nodes_state=dict(type="str", choices=["started", "stopped"]),
             nodes_strategy=dict(
                 type="str", choices=["all", "one_by_one"], default="all"
@@ -316,6 +336,8 @@ def main():
     poll_wait_time = module.params["poll_wait_time"]
     nodes_spec = module.params["nodes_spec"]
     links_spec = module.params["links_spec"]
+    scene_height = module.params["scene_height"]
+    scene_width = module.params["scene_width"]
 
     try:
         # Create server session
@@ -383,6 +405,8 @@ def main():
 
     elif state == "present":
         if pr_exists:
+            project.update(scene_height=scene_height)
+            project.update(scene_width=scene_width)
             if nodes_spec is not None:
                 # Need to verify if nodes exist
                 _nodes_already_created = [node.name for node in project.nodes]
@@ -404,6 +428,8 @@ def main():
         else:
             # Create project
             project.create()
+            project.update(scene_height=scene_height)
+            project.update(scene_width=scene_width)
             # Nodes section
             if nodes_spec is not None:
                 for node_spec in nodes_spec:
