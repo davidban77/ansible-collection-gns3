@@ -302,8 +302,8 @@ def main():
             ),
             project_name=dict(type="str", default=None),
             project_id=dict(type="str", default=None),
-            scene_height=dict(type="int", default=3080),
-            scene_width=dict(type="int", default=3080),
+            scene_height=dict(type="int", default=1000),
+            scene_width=dict(type="int", default=2000),
             nodes_state=dict(type="str", choices=["started", "stopped"]),
             nodes_strategy=dict(
                 type="str", choices=["all", "one_by_one"], default="all"
