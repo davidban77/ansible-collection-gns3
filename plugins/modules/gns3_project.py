@@ -53,7 +53,7 @@ options:
         type: str
     project_path:
         description:
-            - Project path (Ignore in name not specified)
+            -  Path of the project on the server ( Optional, Ignored if project_name not specified )
         type: str
     scene_height:
         description:
