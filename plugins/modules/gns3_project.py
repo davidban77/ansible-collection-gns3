@@ -51,6 +51,18 @@ options:
         description:
             - Project name
         type: str
+    project_path:
+        description:
+            -  Path of the project on the server ( Optional, Ignored if project_name not specified )
+        type: str
+    scene_height:
+        description:
+            - Scene height
+        type: str
+    scene_width:
+        description:
+            - Scene width
+        type: str
     project_id:
         description:
             - Project ID
@@ -283,6 +295,9 @@ def main():
                 choices=["opened", "closed", "present", "absent"],
             ),
             project_name=dict(type="str", default=None),
+            project_path=dict(type="str", default=None),
+            scene_height=dict(type="str", default=None),
+            scene_width=dict(type="str", default=None),
             project_id=dict(type="str", default=None),
             nodes_state=dict(type="str", choices=["started", "stopped"]),
             nodes_strategy=dict(
@@ -309,6 +324,9 @@ def main():
     server_password = module.params["password"]
     state = module.params["state"]
     project_name = module.params["project_name"]
+    project_path = module.params["project_path"]
+    scene_height = module.params["scene_height"]
+    scene_width = module.params["scene_width"]
     project_id = module.params["project_id"]
     nodes_state = module.params["nodes_state"]
     nodes_strategy = module.params["nodes_strategy"]
@@ -324,9 +342,9 @@ def main():
         )
         # Define the project
         if project_name is not None:
-            project = Project(name=project_name, connector=server)
+            project = Project(name=project_name, path=project_path, scene_height=scene_height, scene_width=scene_width, connector=server)
         elif project_id is not None:
-            project = Project(project_id=project_id, connector=server)
+            project = Project(project_id=project_id, scene_height=scene_height, scene_width=scene_width, connector=server)
     except Exception as err:
         module.fail_json(msg=str(err), **result)
 
@@ -346,7 +364,6 @@ def main():
 
                 # Now verify nodes
                 if nodes_state is not None:
-
                     # Change flag based on the nodes state
                     result["changed"] = nodes_state_verification(
                         expected_nodes_state=nodes_state,
